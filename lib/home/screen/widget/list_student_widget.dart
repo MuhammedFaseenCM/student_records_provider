@@ -25,7 +25,7 @@ class _List_Student_WidgetState extends State<List_Student_Widget> {
         actions: [
           IconButton(
               onPressed: () {
-                showSearch(context: context, delegate: search());
+                showSearch(context: context, delegate: Search());
               },
               icon: const Icon(Icons.search))
         ],

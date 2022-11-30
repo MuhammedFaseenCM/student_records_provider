@@ -10,9 +10,9 @@ import 'package:stuentdb_hive/db/model/data_model.dart';
 import '../../db/functions/db_functions.dart';
 
 class ImageWidget extends StatefulWidget {
-  StudentModel data;
-  int? index;
-  ImageWidget({super.key, required this.data, required this.index});
+  final StudentModel data;
+  final int? index;
+  const ImageWidget({super.key, required this.data, required this.index});
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();

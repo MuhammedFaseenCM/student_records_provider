@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../db/functions/db_functions.dart';
 import '../../db/model/data_model.dart';
-import '../../home/screen/widget/list_student_widget.dart';
 
 class EditStudentWidget extends StatefulWidget {
-  StudentModel data;
+  final StudentModel data;
 
-  int? index;
-  EditStudentWidget({super.key, required this.data, required this.index});
+  final int? index;
+  const EditStudentWidget({super.key, required this.data, required this.index});
 
   @override
   State<EditStudentWidget> createState() => _EditStudentWidgetState();
@@ -55,12 +54,12 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
     );
   }
 
-  Widget textformfield(String hinttext, TextInputType, controller) {
+  Widget textformfield(String hinttext, textInputType, controller) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
           border: const OutlineInputBorder(), hintText: hinttext),
-      keyboardType: TextInputType,
+      keyboardType: textInputType,
     );
   }
 

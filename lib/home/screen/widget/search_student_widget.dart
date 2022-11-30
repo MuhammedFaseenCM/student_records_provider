@@ -6,7 +6,7 @@ import '../../../db/functions/db_functions.dart';
 import '../../../db/model/data_model.dart';
 import '../../../profile/widgets/view_student_wigdet.dart';
 
-class search extends SearchDelegate {
+class Search extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return <Widget>[
@@ -50,12 +50,12 @@ class search extends SearchDelegate {
                       );
                     },
                     title: Text(data.name),
-                    leading: const CircleAvatar(
+                    leading: CircleAvatar(
                         radius: 30,
-                        backgroundImage:
-                            AssetImage('assets/images/avatar.jpg')),
+                        backgroundImage: MemoryImage(
+                            const Base64Decoder().convert(data.image))),
                   ),
-                  const Divider(),
+                  const Divider()
                 ],
               );
             } else {

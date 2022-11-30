@@ -6,14 +6,14 @@ import 'package:stuentdb_hive/db/functions/db_functions.dart';
 import 'package:stuentdb_hive/db/model/data_model.dart';
 import 'package:stuentdb_hive/home/screen/widget/list_student_widget.dart';
 
-class Add_Studsent_Widget extends StatefulWidget {
-  Add_Studsent_Widget({super.key});
+class AddStudsentWidget extends StatefulWidget {
+  const AddStudsentWidget({super.key});
 
   @override
-  State<Add_Studsent_Widget> createState() => _Add_Studsent_WidgetState();
+  State<AddStudsentWidget> createState() => _AddStudsentWidgetState();
 }
 
-class _Add_Studsent_WidgetState extends State<Add_Studsent_Widget> {
+class _AddStudsentWidgetState extends State<AddStudsentWidget> {
   final nameController = TextEditingController();
 
   final ageController = TextEditingController();
@@ -46,7 +46,7 @@ class _Add_Studsent_WidgetState extends State<Add_Studsent_Widget> {
             textformfield(
                 'Phone Number', TextInputType.number, phoneController),
             space(),
-            Addbutton('Submit'),
+            addbutton('Submit'),
             space(),
             listbutton()
           ],
@@ -77,7 +77,7 @@ class _Add_Studsent_WidgetState extends State<Add_Studsent_Widget> {
     );
   }
 
-  Widget Addbutton(text) {
+  Widget addbutton(text) {
     return ElevatedButton(
         onPressed: () {
           if (formKey.currentState!.validate()) {
@@ -173,13 +173,13 @@ class _Add_Studsent_WidgetState extends State<Add_Studsent_Widget> {
             children: <Widget>[
               TextButton.icon(
                   onPressed: () {
-                    PickImage(ImageSource.gallery);
+                    pickImage(ImageSource.gallery);
                   },
                   icon: const Icon(Icons.image),
                   label: const Text('Gallery')),
               TextButton.icon(
                   onPressed: () {
-                    PickImage(ImageSource.camera);
+                    pickImage(ImageSource.camera);
                   },
                   icon: const Icon(Icons.camera),
                   label: const Text('Camera'))
@@ -193,7 +193,7 @@ class _Add_Studsent_WidgetState extends State<Add_Studsent_Widget> {
   String _picture = '';
   String _picturetoString = '';
 
-  PickImage(source) async {
+  pickImage(source) async {
     final image = await _picker.pickImage(source: source);
     if (image == null) {
       return;

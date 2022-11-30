@@ -7,10 +7,10 @@ import '../../db/model/data_model.dart';
 import 'edit_image_widget.dart';
 
 class ListStudentWidget extends StatefulWidget {
-  StudentModel data;
+  final StudentModel data;
 
-  int? index;
-  ListStudentWidget({super.key, required this.data, required this.index});
+  final int? index;
+  const ListStudentWidget({super.key, required this.data, required this.index});
 
   @override
   State<ListStudentWidget> createState() => _ListStudentWidgetState();
