@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:stuentdb_hive/Core/core_widgets.dart';
+import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/profile/widgets/edit_student_widget.dart';
 
 import '../../db/model/data_model.dart';
-import 'edit_image_widget.dart';
 
 class ListStudentWidget extends StatefulWidget {
   final StudentModel data;
@@ -27,14 +26,13 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    nameController.text = 'Name : ${widget.data.name}';
-    ageController.text = 'Age : ${widget.data.age}';
-    emailController.text = 'Email : ${widget.data.email}';
-    phoneController.text = 'Phone number : ${widget.data.phone}';
+    nameController.text = '$fullNameText : ${widget.data.name}';
+    ageController.text = '$ageText: ${widget.data.age}';
+    emailController.text = '$mailText : ${widget.data.email}';
+    phoneController.text = '$numberText : ${widget.data.phone}';
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student details'),
-        actions: const [],
+        title: const Text(studDetails),
       ),
       body: SafeArea(
         child: Padding(
@@ -42,7 +40,8 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
           child: Column(
             children: [
               space(),
-              ImageProfile(),
+              imageContainer(
+                  image: widget.data.image, height: 100.0, width: 100.0),
               space(),
               textformfield(nameController),
               space(),
@@ -52,10 +51,7 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
               space(),
               textformfield(phoneController),
               space(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [updateButton(), imageButton()],
-              )
+              updateButton()
             ],
           ),
         ),
@@ -63,51 +59,14 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
     );
   }
 
-  Widget textformfield(controller) {
-    return TextFormField(
-      controller: controller,
-      readOnly: true,
-      decoration: const InputDecoration(border: InputBorder.none),
-    );
-  }
-
-  Widget space() {
-    return const SizedBox(
-      height: 20,
-    );
-  }
-
   Widget updateButton() {
     return ElevatedButton.icon(
         onPressed: () {
-          Navigator.of(context)
-              .pushReplacement(MaterialPageRoute(builder: (context) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return EditStudentWidget(data: widget.data, index: widget.index);
           }));
         },
         icon: const Icon(Icons.edit),
-        label: const Text('Edit details'));
-  }
-
-  Widget imageButton() {
-    return ElevatedButton.icon(
-        onPressed: () {
-          Navigator.of(context)
-              .pushReplacement(MaterialPageRoute(builder: (context) {
-            return ImageWidget(data: widget.data, index: widget.index);
-          }));
-        },
-        icon: const Icon(Icons.camera_alt),
-        label: const Text('Edit image'));
-  }
-
-  Widget ImageProfile() {
-    return Center(
-      child: CircleAvatar(
-        backgroundImage:
-            MemoryImage(const Base64Decoder().convert(widget.data.image)),
-        radius: 50,
-      ),
-    );
+        label: const Text(editStudText));
   }
 }

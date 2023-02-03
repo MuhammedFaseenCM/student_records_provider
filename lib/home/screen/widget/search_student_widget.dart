@@ -1,6 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:stuentdb_hive/Core/colors.dart';
+import 'package:stuentdb_hive/Core/core_widgets.dart';
 
 import '../../../db/functions/db_functions.dart';
 import '../../../db/model/data_model.dart';
@@ -50,10 +51,16 @@ class Search extends SearchDelegate {
                       );
                     },
                     title: Text(data.name),
-                    leading: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: MemoryImage(
-                            const Base64Decoder().convert(data.image))),
+                    leading: imageContainer(image: data.image),
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: redColor,
+                      ),
+                      onPressed: () {
+                        deleteStudentButton(index, context);
+                      },
+                    ),
                   ),
                   const Divider()
                 ],
@@ -89,10 +96,16 @@ class Search extends SearchDelegate {
                       );
                     },
                     title: Text(data.name),
-                    // leading: const CircleAvatar(
-                    //     radius: 30,
-                    //     backgroundImage:
-                    //         MemoryImage( Base64Decoder().convert(data.image)),
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: redColor,
+                      ),
+                      onPressed: () {
+                        deleteStudentButton(index, context);
+                      },
+                    ),
+                    leading: imageContainer(image: data.image),
                   ),
                   const Divider(),
                 ],

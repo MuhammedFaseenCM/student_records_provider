@@ -28,5 +28,5 @@ Future<void> deleteStudent(int index) async {
 Future<void> updateStudent(StudentModel value, int index) async {
   final studentDB = await Hive.openBox<StudentModel>('student_db');
   await studentDB.putAt(index, value);
-  getAllStudent();
+  await getAllStudent();
 }

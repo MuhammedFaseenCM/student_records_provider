@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stuentdb_hive/Core/colors.dart';
+import 'package:stuentdb_hive/Core/core_widgets.dart';
+import 'package:stuentdb_hive/Core/strings.dart';
+import 'package:stuentdb_hive/profile/widgets/image_widget.dart';
 import '../../db/functions/db_functions.dart';
 import '../../db/model/data_model.dart';
 
@@ -29,25 +33,45 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
     phoneController.text = widget.data.phone.toString();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit student'),
-        actions: const [],
+        title: const Text(editStudText),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              picture = '';
+              nochangeText = '';
+            },
+            icon: const Icon(Icons.arrow_back)),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              textformfield('Full name', TextInputType.name, nameController),
-              space(),
-              textformfield('age', TextInputType.number, ageController),
-              space(),
-              textformfield(
-                  'email', TextInputType.emailAddress, emailController),
-              space(),
-              textformfield('phone', TextInputType.number, phoneController),
-              space(),
-              updateButton('Update'),
-            ],
+          child: SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              children: [
+                space(),
+                image(
+                    image: widget.data.image,
+                    context: context,
+                    setState: setState),
+                space(),
+                textformfield(fullNameText, TextInputType.name, nameController),
+                space(),
+                textformfield(ageText, TextInputType.number, ageController),
+                space(),
+                textformfield(
+                    mailText, TextInputType.emailAddress, emailController),
+                space(),
+                textformfield(
+                    numberText, TextInputType.number, phoneController),
+                space(),
+                Text(
+                  nochangeText,
+                  style: const TextStyle(color: redColor),
+                ),
+                updateButton(submitText),
+              ],
+            ),
           ),
         ),
       ),
@@ -71,8 +95,11 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
 
   Widget updateButton(text) {
     return ElevatedButton(
-        onPressed: () {
-          submitButton();
+        onPressed: () async {
+          await submitButton();
+          // setState(() {
+          //   picture = '';
+          // });
         },
         child: Text(text));
   }
@@ -82,24 +109,24 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
     final age = ageController.text.trim();
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
-    final image = widget.data.image;
+    final image = picture;
     final student = StudentModel(
         name: name, age: age, email: email, phone: phone, image: image);
-    if (name.isEmpty || age.isEmpty || phone.isEmpty) {
+    if (name == widget.data.name ||
+        age == widget.data.age ||
+        phone == widget.data.phone ||
+        email == widget.data.email ||
+        image == widget.data.image) {
+      setState(() {
+        nochangeText = 'No changes found';
+      });
       return;
     }
+
     print('$name, $age, $email, $phone');
     updateStudent(student, widget.index!);
     Navigator.of(context).pop();
-    snackBar(context);
-  }
-
-  Future<void> snackBar(BuildContext context) async {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Succesfully Updated'),
-      backgroundColor: Colors.green,
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.all(10),
-    ));
+    Navigator.of(context).pop();
+    snackBar(context, updateText);
   }
 }

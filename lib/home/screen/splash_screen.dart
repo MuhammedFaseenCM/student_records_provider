@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stuentdb_hive/Core/colors.dart';
+import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/home/screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,10 +30,10 @@ class _SplashScreenState extends State<SplashScreen> {
           padding: EdgeInsets.all(2),
           child: Center(
             child: Text(
-              'STUDENT DATABASE',
+              studRecordText,
               style: TextStyle(
-                color: Colors.blue,
-                fontSize: 40,
+                color: blueColor,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -46,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> gotoLogin() async {
     await Future.delayed(const Duration(seconds: 3));
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (ctx) => const HomeScreen()));
   }
