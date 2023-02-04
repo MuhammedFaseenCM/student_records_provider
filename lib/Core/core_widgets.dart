@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
+import 'package:stuentdb_hive/provider/add_stud_provider.dart';
 
+final addPro = AddStudProvider();
 Future<void> deleteStudentButton(int index, context) async {
   showDialog(
       context: context,
@@ -42,7 +45,7 @@ Widget imageContainer({required image, height, width}) {
   return Container(
       height: height ?? 70,
       width: width ?? 70,
-      decoration: image != ''
+      decoration: addPro.picture != ''
           ? BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
@@ -68,4 +71,22 @@ Widget textformfield(controller) {
     readOnly: true,
     decoration: const InputDecoration(border: OutlineInputBorder()),
   );
+}
+
+Widget imageContainer1({height, width}) {
+  return Container(
+      height: height ?? 70,
+      width: width ?? 70,
+      decoration: addPro.picture != null || addPro.picture != ''
+          ? BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                  fit: BoxFit.cover, image: FileImage(File(addPro.picture))))
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: const DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    defaultProfText,
+                  ))));
 }

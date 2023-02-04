@@ -1,22 +1,20 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 
-
-Widget image({required image, required context, required setState}) {
+Widget imageFun({ required context}) {
   return Center(
     child: Stack(children: [
-      imageContainer(
-          image: picture == '' ? image : picture, height: 100.0, width: 100.0),
+      imageContainer1( height: 100.0, width: 100.0),
       Positioned(
           child: InkWell(
         onTap: () {
           showModalBottomSheet(
             context: context,
-            builder: ((builder) =>
-                bottomsheet(context: context, setState: setState)),
+            builder: ((builder) => bottomsheet(context: context)),
           );
         },
         child: const Icon(
@@ -29,7 +27,7 @@ Widget image({required image, required context, required setState}) {
   );
 }
 
-Widget bottomsheet({required context, required setState}) {
+Widget bottomsheet({required context}) {
   return Container(
     height: 100,
     width: MediaQuery.of(context).size.width,
@@ -48,19 +46,13 @@ Widget bottomsheet({required context, required setState}) {
           children: <Widget>[
             TextButton.icon(
                 onPressed: () {
-                  pickImage(
-                      source: ImageSource.gallery,
-                      setState: setState,
-                      context: context);
+                addPro.pickImage(source: ImageSource.gallery, context: context);
                 },
                 icon: const Icon(Icons.image),
                 label: const Text(gallery)),
             TextButton.icon(
                 onPressed: () {
-                  pickImage(
-                      source: ImageSource.camera,
-                      setState: setState,
-                      context: context);
+                  addPro.pickImage(source: ImageSource.camera, context: context);
                 },
                 icon: const Icon(Icons.camera),
                 label: const Text(camera))
@@ -71,14 +63,4 @@ Widget bottomsheet({required context, required setState}) {
   );
 }
 
-pickImage({required source, required setState, required context}) async {
-  final image = await picker.pickImage(source: source);
-  if (image == null) {
-    return;
-  }
 
-  setState(() {
-    picture = image.path;
-    Navigator.of(context).pop();
-  });
-}

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
@@ -7,15 +8,11 @@ import 'package:stuentdb_hive/db/functions/db_functions.dart';
 import 'package:stuentdb_hive/db/model/data_model.dart';
 import 'package:stuentdb_hive/home/screen/widget/list_student_widget.dart';
 import 'package:stuentdb_hive/profile/widgets/image_widget.dart';
+import 'package:stuentdb_hive/provider/add_stud_provider.dart';
 
-class AddStudsentWidget extends StatefulWidget {
-  const AddStudsentWidget({super.key});
+class AddStudsentWidget extends StatelessWidget {
+  AddStudsentWidget({super.key});
 
-  @override
-  State<AddStudsentWidget> createState() => _AddStudsentWidgetState();
-}
-
-class _AddStudsentWidgetState extends State<AddStudsentWidget> {
   final nameController = TextEditingController();
 
   final ageController = TextEditingController();
@@ -24,20 +21,21 @@ class _AddStudsentWidgetState extends State<AddStudsentWidget> {
 
   final phoneController = TextEditingController();
 
-  final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
+      key: scaffoldKey,
       padding: const EdgeInsets.all(15.0),
       child: Form(
-        key: formKey,
+        key: addPro.formKey,
         child: Column(
           children: [
             space(),
-            image(image: picture, context: context, setState: setState),
+            imageFun( context: context),
             Text(
-              imagevalid,
+              Provider.of<AddStudProvider>(context).imageValid,
               style: const TextStyle(color: redColor),
             ),
             space(),
@@ -75,21 +73,15 @@ class _AddStudsentWidgetState extends State<AddStudsentWidget> {
     );
   }
 
-  Widget space() {
-    return const SizedBox(
-      height: 20,
-    );
-  }
-
   Widget addbutton(text) {
     return ElevatedButton(
         onPressed: () {
-          if (picture == '') {
-            setState(() {
-              imagevalid = 'select your image';
-            });
+          if (addPro.picture == '') {
+            Provider.of<AddStudProvider>(scaffoldKey.currentContext!,
+                    listen: false)
+                .changeimageValidString('Select your image');
           }
-          if (formKey.currentState!.validate()) {
+          if (addPro.formKey.currentState!.validate()) {
             submitButton();
           }
         },
@@ -99,12 +91,14 @@ class _AddStudsentWidgetState extends State<AddStudsentWidget> {
   Widget listbutton() {
     return ElevatedButton(
         onPressed: () {
-          setState(() {
-            imagevalid = '';
-            formKey.currentState!.reset();
-          });
+          scaffoldKey.currentContext!
+              .read<AddStudProvider>()
+              .changeimageValidString('');
 
-          Navigator.of(context).push(MaterialPageRoute(
+          Provider.of<AddStudProvider>(scaffoldKey.currentContext!,
+                  listen: false)
+              .resetFormKey();
+          Navigator.of(scaffoldKey.currentContext!).push(MaterialPageRoute(
             builder: (context) => const ListRecordStudent(),
           ));
         },
@@ -117,17 +111,25 @@ class _AddStudsentWidgetState extends State<AddStudsentWidget> {
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
     final student = StudentModel(
-        name: name, age: age, email: email, phone: phone, image: picture);
+        name: name,
+        age: age,
+        email: email,
+        phone: phone,
+        image: addPro.picture);
     if (name.isEmpty ||
         age.isEmpty ||
         email.isEmpty ||
         phone.isEmpty ||
-        picture == '') {
+        addPro.picture == '') {
       return;
     }
     log('$name, $age, $email, $phone, $picture ');
     addStudent(student);
-    formKey.currentState?.reset();
-    snackBar(context, addedText);
+    addPro.formKey.currentState?.reset();
+    Provider.of<AddStudProvider>(scaffoldKey.currentContext!, listen: false)
+        .changePictureString('');
+    Provider.of<AddStudProvider>(scaffoldKey.currentContext!, listen: false)
+        .changeimageValidString('');
+    snackBar(scaffoldKey.currentContext!, addedText);
   }
 }

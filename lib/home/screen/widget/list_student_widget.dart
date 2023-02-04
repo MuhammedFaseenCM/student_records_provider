@@ -1,21 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
+import 'package:stuentdb_hive/db/model/data_model.dart';
 import 'package:stuentdb_hive/home/screen/widget/search_student_widget.dart';
+import 'package:stuentdb_hive/profile/widgets/view_student_wigdet.dart';
+import 'package:stuentdb_hive/provider/stud_record_provider.dart';
 
-import '../../../db/model/data_model.dart';
-import '../../../profile/widgets/view_student_wigdet.dart';
-
-class ListRecordStudent extends StatefulWidget {
+class ListRecordStudent extends StatelessWidget {
   const ListRecordStudent({super.key});
 
-  @override
-  State<ListRecordStudent> createState() => _ListRecordStudentState();
-}
-
-class _ListRecordStudentState extends State<ListRecordStudent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,13 +39,14 @@ class _ListRecordStudentState extends State<ListRecordStudent> {
                     title: Text(data.name),
                     // subtitle: Text('${data.age}\n${data.email}'),
                     leading: imageContainer(image: data.image),
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: redColor
-                      ),
-                      onPressed: () {
-                        deleteStudentButton(index, context);
+                    trailing: Consumer<StudentProvider>(
+                      builder: (context, value, child) {
+                        return IconButton(
+                          icon: const Icon(Icons.delete, color: redColor),
+                          onPressed: () {
+                            value.deleteStudentButton(index, context);
+                          },
+                        );
                       },
                     ),
                     onTap: () {
