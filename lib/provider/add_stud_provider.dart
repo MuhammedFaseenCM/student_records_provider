@@ -36,7 +36,10 @@ class AddStudProvider extends ChangeNotifier {
     if (image == null) {
       return;
     }
-    picture = image.path;
+    
+      picture = image.path;
+    
+
     notifyListeners();
     Navigator.of(context).pop();
   }

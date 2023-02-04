@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
@@ -9,6 +10,8 @@ import 'package:stuentdb_hive/db/model/data_model.dart';
 import 'package:stuentdb_hive/home/screen/widget/list_student_widget.dart';
 import 'package:stuentdb_hive/profile/widgets/image_widget.dart';
 import 'package:stuentdb_hive/provider/add_stud_provider.dart';
+
+final scaffoldKey = GlobalKey<ScaffoldState>();
 
 class AddStudsentWidget extends StatelessWidget {
   AddStudsentWidget({super.key});
@@ -21,8 +24,6 @@ class AddStudsentWidget extends StatelessWidget {
 
   final phoneController = TextEditingController();
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,28 +31,39 @@ class AddStudsentWidget extends StatelessWidget {
       padding: const EdgeInsets.all(15.0),
       child: Form(
         key: addPro.formKey,
-        child: Column(
-          children: [
-            space(),
-            imageFun( context: context),
-            Text(
-              Provider.of<AddStudProvider>(context).imageValid,
-              style: const TextStyle(color: redColor),
-            ),
-            space(),
-            textformfield(fullNameText, TextInputType.name, nameController),
-            space(),
-            textformfield(ageText, TextInputType.number, ageController),
-            space(),
-            textformfield(
-                mailText, TextInputType.emailAddress, emailController),
-            space(),
-            textformfield(numberText, TextInputType.number, phoneController),
-            space(),
-            addbutton(submitText),
-            space(),
-            listbutton()
-          ],
+        child: Consumer<AddStudProvider>(
+          builder: (context, value, child) => Column(
+            children: [
+              space(),
+              imageFun(context: context, image: value.value),
+              // value.picture != null || addPro.picture != ''
+              //     ? CircleAvatar(
+              //         radius: 50,
+              //         backgroundImage: FileImage(File(value.picture)),
+              //       )
+              //     : const CircleAvatar(
+              //         radius: 50,
+              //         backgroundImage: NetworkImage(defaultProfText),
+              //       ),
+              Text(
+                value.imageValid,
+                style: const TextStyle(color: redColor),
+              ),
+              space(),
+              textformfield(fullNameText, TextInputType.name, nameController),
+              space(),
+              textformfield(ageText, TextInputType.number, ageController),
+              space(),
+              textformfield(
+                  mailText, TextInputType.emailAddress, emailController),
+              space(),
+              textformfield(numberText, TextInputType.number, phoneController),
+              space(),
+              addbutton(submitText),
+              space(),
+              listbutton()
+            ],
+          ),
         ),
       ),
     );

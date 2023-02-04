@@ -1,14 +1,13 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 
-Widget imageFun({ required context}) {
+Widget imageFun({required context, required image}) {
   return Center(
     child: Stack(children: [
-      imageContainer1( height: 100.0, width: 100.0),
+      imageContainer1(height: 100.0, width: 100.0, pic: image),
       Positioned(
           child: InkWell(
         onTap: () {
@@ -46,13 +45,15 @@ Widget bottomsheet({required context}) {
           children: <Widget>[
             TextButton.icon(
                 onPressed: () {
-                addPro.pickImage(source: ImageSource.gallery, context: context);
+                  addPro.pickImage(
+                      source: ImageSource.gallery, context: context);
                 },
                 icon: const Icon(Icons.image),
                 label: const Text(gallery)),
             TextButton.icon(
                 onPressed: () {
-                  addPro.pickImage(source: ImageSource.camera, context: context);
+                  addPro.pickImage(
+                      source: ImageSource.camera, context: context);
                 },
                 icon: const Icon(Icons.camera),
                 label: const Text(camera))
@@ -62,5 +63,3 @@ Widget bottomsheet({required context}) {
     ),
   );
 }
-
-
