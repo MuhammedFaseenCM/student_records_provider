@@ -10,14 +10,13 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     getAllStudent();
     return Scaffold(
-
       appBar: AppBar(
         title: const Text(addStudentText),
       ),
       body: SingleChildScrollView(
         reverse: true,
         child: Column(
-          children: const [AddStudsentWidget()],
+          children:  [AddStudsentWidget()],
         ),
       ),
     );

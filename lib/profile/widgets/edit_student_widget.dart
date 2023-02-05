@@ -50,10 +50,9 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
             child: Column(
               children: [
                 space(),
-                image(
+                imageFun(
                     image: widget.data.image,
-                    context: context,
-                    setState: setState),
+                    context: context),
                 space(),
                 textformfield(fullNameText, TextInputType.name, nameController),
                 space(),
