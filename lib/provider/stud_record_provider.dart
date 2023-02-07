@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
-import 'package:stuentdb_hive/home/screen/home_screen.dart';
+import 'package:stuentdb_hive/home/screen/widget/add_student_widget.dart';
 
 class StudentProvider extends ChangeNotifier {
   Future<void> gotoLogin(context) async {
     await Future.delayed(const Duration(seconds: 3));
+    getAllStudent();
     // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+        MaterialPageRoute(builder: (ctx) => AddStudsentWidget()));
   }
 
   Future<void> deleteStudentButton(int index, context) async {

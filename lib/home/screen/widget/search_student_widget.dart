@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
+import 'package:stuentdb_hive/profile/widgets/edit_student_widget.dart';
 
 import '../../../db/functions/db_functions.dart';
 import '../../../db/model/data_model.dart';
-import '../../../profile/widgets/view_student_wigdet.dart';
 
 class Search extends SearchDelegate {
   @override
@@ -46,7 +46,7 @@ class Search extends SearchDelegate {
                       Navigator.of(ctx).push(
                         MaterialPageRoute(
                           builder: (context) =>
-                              ListStudentWidget(data: data, index: data.index),
+                              EditStudentWidget(data: data, index: data.index),
                         ),
                       );
                     },
@@ -91,7 +91,7 @@ class Search extends SearchDelegate {
                     onTap: () {
                       Navigator.of(ctx).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => ListStudentWidget(
+                            builder: (context) => EditStudentWidget(
                                 data: data, index: data.index)),
                       );
                     },

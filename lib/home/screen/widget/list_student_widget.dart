@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
@@ -8,7 +6,7 @@ import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
 import 'package:stuentdb_hive/db/model/data_model.dart';
 import 'package:stuentdb_hive/home/screen/widget/search_student_widget.dart';
-import 'package:stuentdb_hive/profile/widgets/view_student_wigdet.dart';
+import 'package:stuentdb_hive/profile/widgets/edit_student_widget.dart';
 import 'package:stuentdb_hive/provider/stud_record_provider.dart';
 
 class ListRecordStudent extends StatelessWidget {
@@ -52,7 +50,7 @@ class ListRecordStudent extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              ListStudentWidget(data: data, index: index)));
+                              EditStudentWidget(data: data, index: index)));
                     },
                   ),
                 );

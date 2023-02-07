@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
@@ -26,44 +25,63 @@ class AddStudsentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      key: scaffoldKey,
-      padding: const EdgeInsets.all(15.0),
-      child: Form(
-        key: addPro.formKey,
-        child: Consumer<AddStudProvider>(
-          builder: (context, value, child) => Column(
-            children: [
-              space(),
-              imageFun(context: context, image: value.value),
-              // value.picture != null || addPro.picture != ''
-              //     ? CircleAvatar(
-              //         radius: 50,
-              //         backgroundImage: FileImage(File(value.picture)),
-              //       )
-              //     : const CircleAvatar(
-              //         radius: 50,
-              //         backgroundImage: NetworkImage(defaultProfText),
-              //       ),
-              Text(
-                value.imageValid,
-                style: const TextStyle(color: redColor),
+    final addProvider = Provider.of<AddStudProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      addPro.picture = '';
+    });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(addStudentText),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              key: scaffoldKey,
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: addPro.formKey,
+                child: Consumer<AddStudProvider>(
+                  builder: (context, value, child) => Column(
+                    children: [
+                      space(),
+                      value.picture == ''
+                          ? imageFun(
+                              context: context,
+                              image: '',
+                              imageFun: addProvider,
+                              camIcon: false)
+                          : imageFun(
+                              context: context,
+                              image: value.picture,
+                              imageFun: addProvider,
+                              camIcon: false),
+                      Text(
+                        value.imageValid,
+                        style: const TextStyle(color: redColor),
+                      ),
+                      space(),
+                      textformfield(
+                          fullNameText, TextInputType.name, nameController),
+                      space(),
+                      textformfield(
+                          ageText, TextInputType.number, ageController),
+                      space(),
+                      textformfield(mailText, TextInputType.emailAddress,
+                          emailController),
+                      space(),
+                      textformfield(
+                          numberText, TextInputType.number, phoneController),
+                      space(),
+                      addbutton(submitText, value.picture),
+                      space(),
+                      listbutton()
+                    ],
+                  ),
+                ),
               ),
-              space(),
-              textformfield(fullNameText, TextInputType.name, nameController),
-              space(),
-              textformfield(ageText, TextInputType.number, ageController),
-              space(),
-              textformfield(
-                  mailText, TextInputType.emailAddress, emailController),
-              space(),
-              textformfield(numberText, TextInputType.number, phoneController),
-              space(),
-              addbutton(submitText),
-              space(),
-              listbutton()
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -85,16 +103,20 @@ class AddStudsentWidget extends StatelessWidget {
     );
   }
 
-  Widget addbutton(text) {
+  Widget addbutton(text, validpic) {
     return ElevatedButton(
         onPressed: () {
-          if (addPro.picture == '') {
+          if (validpic == '') {
             Provider.of<AddStudProvider>(scaffoldKey.currentContext!,
                     listen: false)
                 .changeimageValidString('Select your image');
+          } else {
+            Provider.of<AddStudProvider>(scaffoldKey.currentContext!,
+                    listen: false)
+                .changeimageValidString('');
           }
           if (addPro.formKey.currentState!.validate()) {
-            submitButton();
+            submitButton(validpic);
           }
         },
         child: Text(text));
@@ -117,22 +139,18 @@ class AddStudsentWidget extends StatelessWidget {
         child: const Text(viewStudText));
   }
 
-  Future<void> submitButton() async {
+  Future<void> submitButton(pic) async {
     final name = nameController.text.trim();
     final age = ageController.text.trim();
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
     final student = StudentModel(
-        name: name,
-        age: age,
-        email: email,
-        phone: phone,
-        image: addPro.picture);
+        name: name, age: age, email: email, phone: phone, image: pic);
     if (name.isEmpty ||
         age.isEmpty ||
         email.isEmpty ||
         phone.isEmpty ||
-        addPro.picture == '') {
+        pic == '') {
       return;
     }
     log('$name, $age, $email, $phone, $picture ');

@@ -1,44 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/profile/widgets/image_widget.dart';
+import 'package:stuentdb_hive/provider/add_stud_provider.dart';
 import '../../db/functions/db_functions.dart';
 import '../../db/model/data_model.dart';
 
-class EditStudentWidget extends StatefulWidget {
+class EditStudentWidget extends StatelessWidget {
   final StudentModel data;
-
   final int? index;
   const EditStudentWidget({super.key, required this.data, required this.index});
 
   @override
-  State<EditStudentWidget> createState() => _EditStudentWidgetState();
-}
-
-class _EditStudentWidgetState extends State<EditStudentWidget> {
-  final nameController = TextEditingController();
-
-  final ageController = TextEditingController();
-
-  final emailController = TextEditingController();
-
-  final phoneController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
-    nameController.text = widget.data.name.toString();
-    ageController.text = widget.data.age.toString();
-    emailController.text = widget.data.email.toString();
-    phoneController.text = widget.data.phone.toString();
+    final addProvider = Provider.of<AddStudProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      addProvider.readonly = true;
+      addProvider.nochangeText = '';
+      addProvider.changeTitle('Student details');
+      nameController.text = data.name;
+      ageController.text = data.age;
+      emailController.text = data.email;
+      phoneController.text = data.phone;
+    });
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(editStudText),
+        title: Text(addProvider.studDetails),
         leading: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
               picture = '';
-              nochangeText = '';
+              addProvider.nochangeText = '';
             },
             icon: const Icon(Icons.arrow_back)),
       ),
@@ -47,39 +42,47 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             reverse: true,
-            child: Column(
-              children: [
-                space(),
-                imageFun(
-                    image: widget.data.image,
-                    context: context),
-                space(),
-                textformfield(fullNameText, TextInputType.name, nameController),
-                space(),
-                textformfield(ageText, TextInputType.number, ageController),
-                space(),
-                textformfield(
-                    mailText, TextInputType.emailAddress, emailController),
-                space(),
-                textformfield(
-                    numberText, TextInputType.number, phoneController),
-                space(),
-                Text(
-                  nochangeText,
-                  style: const TextStyle(color: redColor),
-                ),
-                updateButton(submitText),
-              ],
-            ),
+            child: Consumer<AddStudProvider>(builder: (context, value, _) {
+              return Column(
+                children: [
+                  space(),
+                  imageFun(
+                      image: data.image,
+                      context: context,
+                      imageFun: addProvider,
+                      camIcon: addProvider.readonly),
+                  space(),
+                  textformfield(
+                      fullNameText, TextInputType.name, nameController, value),
+                  space(),
+                  textformfield(
+                      ageText, TextInputType.number, ageController, value),
+                  space(),
+                  textformfield(mailText, TextInputType.emailAddress,
+                      emailController, value),
+                  space(),
+                  textformfield(
+                      numberText, TextInputType.number, phoneController, value),
+                  space(),
+                  Text(
+                    addProvider.nochangeText,
+                    style: const TextStyle(color: redColor),
+                  ),
+                  updateButton(submitText, context, value),
+                ],
+              );
+            }),
           ),
         ),
       ),
     );
   }
 
-  Widget textformfield(String hinttext, textInputType, controller) {
+  Widget textformfield(
+      String hinttext, textInputType, controller, addProvider) {
     return TextFormField(
       controller: controller,
+      readOnly: addProvider.readonly,
       decoration: InputDecoration(
           border: const OutlineInputBorder(), hintText: hinttext),
       keyboardType: textInputType,
@@ -92,40 +95,51 @@ class _EditStudentWidgetState extends State<EditStudentWidget> {
     );
   }
 
-  Widget updateButton(text) {
-    return ElevatedButton(
-        onPressed: () async {
-          await submitButton();
-          // setState(() {
-          //   picture = '';
-          // });
-        },
-        child: Text(text));
+  Widget updateButton(text, context, addProvider) {
+    return addProvider.readonly
+        ? ElevatedButton(
+            onPressed: () async {
+              addProvider.changeReadonly(false);
+              addProvider.changeTitle('Edit student details');
+            },
+            child: const Text("Update"))
+        : ElevatedButton(
+            onPressed: () async {
+              await submitButton(context, addProvider);
+            },
+            child: Text(text));
   }
 
-  Future<void> submitButton() async {
+  Future<void> submitButton(context, addProvider) async {
     final name = nameController.text.trim();
     final age = ageController.text.trim();
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
-    final image = picture;
+    final image = data.image;
     final student = StudentModel(
         name: name, age: age, email: email, phone: phone, image: image);
-    if (name == widget.data.name ||
-        age == widget.data.age ||
-        phone == widget.data.phone ||
-        email == widget.data.email ||
-        image == widget.data.image) {
-      setState(() {
-        nochangeText = 'No changes found';
-      });
+    if (name == data.name &&
+        age == data.age &&
+        phone == data.phone &&
+        email == data.email &&
+        image == data.image) {
+      addProvider.noChangeText();
+
       return;
     }
 
     print('$name, $age, $email, $phone');
-    updateStudent(student, widget.index!);
+    updateStudent(student, index!);
     Navigator.of(context).pop();
     Navigator.of(context).pop();
     snackBar(context, updateText);
   }
 }
+
+final nameController = TextEditingController();
+
+final ageController = TextEditingController();
+
+final emailController = TextEditingController();
+
+final phoneController = TextEditingController();

@@ -4,7 +4,10 @@ import 'package:stuentdb_hive/Core/strings.dart';
 class AddStudProvider extends ChangeNotifier {
   String picture = '';
   String imageValid = '';
+  bool readonly = true;
+  String nochangeText = '';
   final formKey = GlobalKey<FormState>();
+  String studDetails = 'Student details';
 
   String get value => picture;
 
@@ -15,6 +18,21 @@ class AddStudProvider extends ChangeNotifier {
 
   void changePictureString(text) {
     picture = text;
+    notifyListeners();
+  }
+
+  void noChangeText() {
+    nochangeText = 'No changes found';
+    notifyListeners();
+  }
+
+  void changeTitle(text) {
+    studDetails = text;
+    notifyListeners();
+  }
+
+  void changeReadonly(value) {
+    readonly = value;
     notifyListeners();
   }
 
@@ -36,9 +54,7 @@ class AddStudProvider extends ChangeNotifier {
     if (image == null) {
       return;
     }
-    
-      picture = image.path;
-    
+    picture = image.path;
 
     notifyListeners();
     Navigator.of(context).pop();
