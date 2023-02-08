@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
-import 'package:stuentdb_hive/profile/widgets/image_widget.dart';
+import 'package:stuentdb_hive/Core/image_widget.dart';
 import 'package:stuentdb_hive/provider/add_stud_provider.dart';
 import '../../db/functions/db_functions.dart';
 import '../../db/model/data_model.dart';
@@ -25,7 +27,7 @@ class EditStudentWidget extends StatelessWidget {
       emailController.text = data.email;
       phoneController.text = data.phone;
     });
-
+    log("=<><>=rebuilded=<><>=");
     return Scaffold(
       appBar: AppBar(
         title: Text(addProvider.studDetails),
@@ -47,7 +49,7 @@ class EditStudentWidget extends StatelessWidget {
                 children: [
                   space(),
                   imageFun(
-                      image: data.image,
+                      image: value.picture == '' ? data.image : value.picture,
                       context: context,
                       imageFun: addProvider,
                       camIcon: addProvider.readonly),
@@ -80,18 +82,26 @@ class EditStudentWidget extends StatelessWidget {
 
   Widget textformfield(
       String hinttext, textInputType, controller, addProvider) {
-    return TextFormField(
-      controller: controller,
-      readOnly: addProvider.readonly,
-      decoration: InputDecoration(
-          border: const OutlineInputBorder(), hintText: hinttext),
-      keyboardType: textInputType,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(hinttext),
+        space(height: 5.0),
+        TextFormField(
+          controller: controller,
+          readOnly: addProvider.readonly,
+          decoration: InputDecoration(
+              border: addProvider.readonly ? null : const OutlineInputBorder(),
+              hintText: hinttext),
+          keyboardType: textInputType,
+        ),
+      ],
     );
   }
 
-  Widget space() {
-    return const SizedBox(
-      height: 20,
+  Widget space({height}) {
+    return SizedBox(
+      height: height ?? 20,
     );
   }
 
@@ -115,22 +125,27 @@ class EditStudentWidget extends StatelessWidget {
     final age = ageController.text.trim();
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
-    final image = data.image;
+    String image = data.image;
+    if (addProvider.picture != '') {
+      image = addProvider.picture;
+    }
+
     final student = StudentModel(
         name: name, age: age, email: email, phone: phone, image: image);
     if (name == data.name &&
         age == data.age &&
         phone == data.phone &&
         email == data.email &&
-        image == data.image) {
+        image == data.image &&
+        addProvider.picture == '') {
       addProvider.noChangeText();
 
       return;
     }
 
     print('$name, $age, $email, $phone');
-    updateStudent(student, index!);
-    Navigator.of(context).pop();
+    Provider.of<DBfunctions>(context, listen: false)
+        .updateStudent(student, index!);
     Navigator.of(context).pop();
     snackBar(context, updateText);
   }

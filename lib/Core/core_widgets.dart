@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
+import 'package:stuentdb_hive/home/screen/widget/add_student_widget.dart';
 import 'package:stuentdb_hive/provider/add_stud_provider.dart';
 
 final addPro = AddStudProvider();
-
-enum ActionType { AddStudent, EditStudent }
 
 Future<void> deleteStudentButton(int index, context) async {
   showDialog(
@@ -19,7 +19,9 @@ Future<void> deleteStudentButton(int index, context) async {
           actions: [
             TextButton(
                 onPressed: () {
-                  deleteStudent(index);
+                  Provider.of<DBfunctions>(scaffoldKey.currentContext!,
+                          listen: false)
+                      .deleteStudent(index);
                   Navigator.of(context).pop();
                   snackBar(context, 'Succesfully deleted');
                 },
@@ -62,9 +64,9 @@ Widget imageContainer({required image, height, width}) {
 //                   ))));
 }
 
-Widget space() {
-  return const SizedBox(
-    height: 20,
+Widget space({height}) {
+  return  SizedBox(
+    height: height??20,
   );
 }
 

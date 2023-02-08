@@ -6,8 +6,8 @@ import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
 import 'package:stuentdb_hive/db/model/data_model.dart';
-import 'package:stuentdb_hive/home/screen/widget/list_student_widget.dart';
-import 'package:stuentdb_hive/profile/widgets/image_widget.dart';
+import 'package:stuentdb_hive/profile/widgets/list_student_widget.dart';
+import 'package:stuentdb_hive/Core/image_widget.dart';
 import 'package:stuentdb_hive/provider/add_stud_provider.dart';
 
 final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -154,7 +154,8 @@ class AddStudsentWidget extends StatelessWidget {
       return;
     }
     log('$name, $age, $email, $phone, $picture ');
-    addStudent(student);
+    Provider.of<DBfunctions>(scaffoldKey.currentContext!, listen: false)
+        .addStudent(student);
     addPro.formKey.currentState?.reset();
     Provider.of<AddStudProvider>(scaffoldKey.currentContext!, listen: false)
         .changePictureString('');

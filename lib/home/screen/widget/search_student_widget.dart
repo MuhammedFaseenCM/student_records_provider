@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/profile/widgets/edit_student_widget.dart';
@@ -31,13 +31,11 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: studentListNotifier,
-      builder:
-          (BuildContext ctx, List<StudentModel> studentList, Widget? child) {
+    return Consumer<DBfunctions>(
+      builder: (BuildContext ctx, value, Widget? child) {
         return ListView.builder(
           itemBuilder: (ctx, index) {
-            final data = studentList[index];
+            final data = DBfunctions.studentList[index];
             if (data.name.toLowerCase().contains(query.toLowerCase())) {
               return Column(
                 children: [
@@ -69,7 +67,7 @@ class Search extends SearchDelegate {
               return Container();
             }
           },
-          itemCount: studentList.length,
+          itemCount: DBfunctions.studentList.length,
         );
       },
     );
@@ -77,16 +75,15 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: studentListNotifier,
-      builder:
-          (BuildContext ctx, List<StudentModel> studentList, Widget? child) {
+    return Consumer<DBfunctions>(
+      builder: (BuildContext ctx, value, Widget? child) {
         return ListView.builder(
           itemBuilder: (ctx, index) {
-            final data = studentList[index];
+            final data = DBfunctions.studentList[index];
             if (data.name.toLowerCase().contains(query.toLowerCase())) {
               return Column(
                 children: [
+                  space(height: 10.0),
                   ListTile(
                     onTap: () {
                       Navigator.of(ctx).pushReplacement(
@@ -114,7 +111,7 @@ class Search extends SearchDelegate {
               return Container();
             }
           },
-          itemCount: studentList.length,
+          itemCount: DBfunctions.studentList.length,
         );
       },
     );

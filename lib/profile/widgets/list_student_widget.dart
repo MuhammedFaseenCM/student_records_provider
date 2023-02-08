@@ -4,6 +4,7 @@ import 'package:stuentdb_hive/Core/colors.dart';
 import 'package:stuentdb_hive/Core/core_widgets.dart';
 import 'package:stuentdb_hive/Core/strings.dart';
 import 'package:stuentdb_hive/db/functions/db_functions.dart';
+import 'package:stuentdb_hive/db/functions/db_functions.dart';
 import 'package:stuentdb_hive/db/model/data_model.dart';
 import 'package:stuentdb_hive/home/screen/widget/search_student_widget.dart';
 import 'package:stuentdb_hive/profile/widgets/edit_student_widget.dart';
@@ -25,13 +26,20 @@ class ListRecordStudent extends StatelessWidget {
               icon: const Icon(Icons.search))
         ],
       ),
-      body: ValueListenableBuilder(
-        builder:
-            (BuildContext ctx, List<StudentModel> studentList, Widget? child) {
+      body: Consumer<DBfunctions>(
+        builder: (BuildContext ctx, value, Widget? child) {
+          if (DBfunctions.studentList.isEmpty) {
+            return const Center(
+              child: Text(
+                "Student list is empty",
+                style: TextStyle(fontSize: 15.0),
+              ),
+            );
+          }
           return ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               itemBuilder: (ctx, index) {
-                final data = studentList[index];
+                final data = DBfunctions.studentList[index];
                 return Card(
                   child: ListTile(
                     title: Text(data.name),
@@ -58,9 +66,8 @@ class ListRecordStudent extends StatelessWidget {
               separatorBuilder: (ctx, index) {
                 return const Divider();
               },
-              itemCount: studentList.length);
+              itemCount: DBfunctions.studentList.length);
         },
-        valueListenable: studentListNotifier,
       ),
     );
   }

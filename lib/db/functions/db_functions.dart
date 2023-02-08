@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stuentdb_hive/db/model/data_model.dart';
 
-ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
+//ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
 
-Future<void> addStudent(StudentModel value) async {
-  final studentDB = await Hive.openBox<StudentModel>('student_db');
-  final id = await studentDB.add(value);
-  value.index = id;
-  studentListNotifier.value.add(value);
-  studentListNotifier.notifyListeners();
-}
+class DBfunctions extends ChangeNotifier {
+  static List<StudentModel> studentList = [];
+  Future<void> addStudent(StudentModel value) async {
+    final studentDB = await Hive.openBox<StudentModel>('student_db');
+    final id = await studentDB.add(value);
+    value.index = id;
+    studentList.add(value);
+    notifyListeners();
+  }
 
-Future<void> getAllStudent() async {
+    Future<void> getAllStudent() async {
   final studentDB = await Hive.openBox<StudentModel>('student_db');
-  studentListNotifier.value.clear();
-  studentListNotifier.value.addAll(studentDB.values);
-  studentListNotifier.notifyListeners();
+  studentList.clear();
+  studentList.addAll(studentDB.values);
+  notifyListeners();
 }
 
 Future<void> deleteStudent(int index) async {
@@ -30,3 +32,7 @@ Future<void> updateStudent(StudentModel value, int index) async {
   await studentDB.putAt(index, value);
   await getAllStudent();
 }
+  
+}
+
+
